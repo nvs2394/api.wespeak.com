@@ -2,9 +2,11 @@
   "app": {
     "port": "3000",
     "name": "wespeak",
-    "logLevel": "info"
+    "logLevel": "info",
+    "apiRoot": "/api/v1"
   },
   "db": {
+    "host": "127.0.0.1",
     "name": "wespeak",
     "port": "27017"
   },

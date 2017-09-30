@@ -6,9 +6,11 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const config = require('config')
+const mongoose = require('mongoose')
 
 const server = require('./server')
 const logger = require('./server/utils/logger')
+const dbConnection = 'mongodb://' + `${config.get('db.host')}` + '/' + `${config.get('db.name')}`
 
 const gracefulStopServer = function () {
   // Wait 10 secs for existing connection to close and then exit.
@@ -49,4 +51,28 @@ const startServer = async function () {
   }
 }
 
-startServer()
+/**
+ *Connect MongoDB with mongoose
+ */
+mongoose.connect(dbConnection, {
+  useMongoClient: true,
+  promiseLibrary: global.Promise
+})
+
+mongoose.connection.on('connected', () => {
+  const message = '** Success to connect to database **'
+  console.log(message)
+  startServer()
+})
+
+mongoose.connection.on('error', () => {
+  const message = '** Failed to connect to database. **'
+  console.log(message)
+})
+
+process.on('SIGINT', () => {
+  mongoose.connection.close(() => {
+    console.log('Mongoose default connection disconnected through app termination')
+    process.exit(0)
+  })
+})

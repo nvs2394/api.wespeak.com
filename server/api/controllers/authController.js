@@ -1,7 +1,8 @@
 'use strict'
+const { createNewUser } = require('../handlers/auth.js')
 
 const logIn = async function (user) {
-  return 'logIn'
+  return createNewUser()
 }
 
 const signUp = async function (user) {

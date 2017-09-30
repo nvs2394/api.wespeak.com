@@ -1,6 +1,7 @@
 'use strict'
 const Config = require('config')
 const { userValidations } = require('../validations')
+const { createNewUser } = require('../handlers/auth')
 
 const API_PATH = Config.get('app.apiRoot')
 
@@ -12,9 +13,7 @@ const routes = []
 routes.push({
   path: API_PATH + '/login',
   method: 'GET',
-  handler: () => {
-
-  },
+  handler: createNewUser,
   config: {
     tags: ['api'],
     validate: userValidations.getUserByUserId
