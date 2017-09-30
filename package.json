@@ -33,6 +33,7 @@
     "hapi-swagger": "7.7.1",
     "http-status": "1.0.1",
     "inert": "4.2.1",
+    "inherits": "^2.0.3",
     "joi": "10.6.0",
     "lodash": "4.17.4",
     "mongoose": "^4.11.13",
