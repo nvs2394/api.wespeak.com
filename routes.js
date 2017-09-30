@@ -5,12 +5,14 @@ const path = require('path')
 const _ = require('lodash')
 const fs = require('fs')
 
-// Bootstrap models mongoose
-fs.readdirSync('./server/models').forEach(function(file) {
+/**
+ *Bootstrap models mongoose
+ */
+fs.readdirSync('./server/models').forEach((file) => {
   if (~file.indexOf('.js')) {
-    require('./server/models/' + file);
+    require('./server/models/' + file)
   }
-});
+})
 
 // add ping route by default for health check
 const routes = [{
