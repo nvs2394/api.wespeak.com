@@ -1,0 +1,15 @@
+{
+  "app": {
+    "port": "APP_PORT",
+    "name": "APP_NAME",
+    "logLevel": "LOG_LEVEL",
+    "apiRoot": "/api/v1"
+  },
+  "db": {
+    "name": "wespeak",
+    "port": "27017"
+  },
+  "fireBaseApi": {
+    "apiKey": "OPEN_WEATHER_API_KEY"
+  }
+}
