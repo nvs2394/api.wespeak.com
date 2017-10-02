@@ -30,6 +30,7 @@
     "good": "7.3.0",
     "good-console": "6.4.0",
     "hapi": "16.5.2",
+    "hapi-auth-jwt": "^4.0.0",
     "hapi-swagger": "7.7.1",
     "http-status": "1.0.1",
     "inert": "4.2.1",
@@ -38,6 +39,8 @@
     "lodash": "4.17.4",
     "mongoose": "^4.11.13",
     "newrelic": "2.2.0",
+    "request-promise": "^4.2.2",
+    "superagent": "^3.6.2",
     "vision": "4.1.1"
   },
   "devDependencies": {

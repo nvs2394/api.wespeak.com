@@ -1,14 +1,16 @@
-const responseSuccess = (code, data) => {
+const responseSuccess = (statusCode, message, data) => {
   return {
-    code,
+    statusCode,
+    message,
     data
   }
 }
 
-const responseError = (code, message) => {
+const responseError = (statusCode, message, error) => {
   return {
-    code,
-    message
+    statusCode,
+    message,
+    error
   }
 }
 

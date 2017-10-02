@@ -1,16 +1,36 @@
-const mongoose = require('mongoose')
-const User = mongoose.model('User')
+const { fbLoginCtrl } = require('../controllers/authController')
+const { getUserByEmail, createNewUser } = require('../controllers/userController')
+const { genToken } = require('../../../libs/wespeakJwt')
 
-const createNewUser = () => {
-  const newUser = new User({
-    name: 'Son'
-  })
+const facebookSignin = async (request, reply) => {
+  const accessToken = request.query.accessToken
+  try {
+    const userInfo = await fbLoginCtrl(accessToken)
+    if (userInfo) {
+      const userExist = await getUserByEmail(userInfo.email)
+      if (userExist) {
+        return reply({
+          token: genToken(userExist)
+        })
+      }
+      const newUser = await createNewUser(userInfo)
+      if (newUser) {
+        return reply({
+          token: genToken(userExist)
+        })
+      }
+      return reply({
+        error: 'Something went wrong'
+      })
+    }
 
-  newUser.save()
+  } catch (error) {
+    return reply(
+      error
+    )
+  }
 }
 
-createNewUser()
-
 module.exports = {
-  createNewUser
+  facebookSignin
 }

@@ -9,7 +9,7 @@ const userValidations = {
    */
   getUserByUserId: {
     headers: {},
-    query: {
+    params: {
       id: joi.string().trim().required().description('Id of user you want to fetch')
     },
     options: {

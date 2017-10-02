@@ -1,7 +1,7 @@
 'use strict'
 const Config = require('config')
-const { userValidations } = require('../validations')
-const { createNewUser } = require('../handlers/auth')
+const { authValidations } = require('../validations')
+const authHandler = require('../handlers/auth')
 
 const API_PATH = Config.get('app.apiRoot')
 
@@ -13,25 +13,16 @@ const routes = []
 routes.push({
   path: API_PATH + '/login',
   method: 'GET',
-  handler: createNewUser,
+  handler: authHandler.facebookSignin,
   config: {
-    tags: ['api'],
-    validate: userValidations.getUserByUserId
-  }
-})
-
-/**
- *GET /getUserByEmail
- */
-routes.push({
-  path: API_PATH + '/signup',
-  method: 'GET',
-  handler: () => {
-
-  },
-  config: {
-    tags: ['api'],
-    validate: userValidations.getUserByEmail
+    tags: ['api', 'AUTH'],
+    validate: authValidations.logIn,
+    plugins: {
+      'hapi-swagger': {
+        produces: ['application/json', 'application/xml'],
+        consumes: ['application/json', 'application/xml']
+      }
+    }
   }
 })
 
