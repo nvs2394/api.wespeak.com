@@ -14,7 +14,7 @@ const config = require('config')
  */
 const Package = require('./package.json')
 
-const DEVELOPMENT = 'development'
+const DEVELOPMENT = 'dev'
 
 /**
  * exports array of plugins with configuration.
