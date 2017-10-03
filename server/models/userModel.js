@@ -22,6 +22,10 @@ const UserSchema = new Schema({
     type: Boolean,
     default: false
   },
+  desscription: {
+    type: String,
+    default: ''
+  },
   scope: [String]
 })
 

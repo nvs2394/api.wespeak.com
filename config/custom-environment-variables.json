@@ -1,13 +1,17 @@
 {
   "app": {
-    "port": "APP_PORT",
-    "name": "APP_NAME",
-    "logLevel": "LOG_LEVEL",
-    "apiRoot": "/api/v1"
+    "port": "3000",
+    "name": "wespeak",
+    "logLevel": "info",
+    "apiRoot": "/api/v1",
+    "jwtSecret": "This is we speak app"
   },
   "db": {
+    "host": "127.0.0.1",
     "name": "wespeak",
-    "port": "27017"
+    "port": "27017",
+    "username": "wespeakuser",
+    "password": "wespeak2017@user"
   },
   "fireBaseApi": {
     "apiKey": "OPEN_WEATHER_API_KEY"

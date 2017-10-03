@@ -71,3 +71,6 @@ yarn lint
 
 ## Miscellaneous
 - To turn off logs getting logged via `good-console` in development environment, remove it from `plugins.js`
+
+### How to get data from API
+-Header : Authorization : Bearer +  token 
