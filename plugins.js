@@ -14,7 +14,7 @@ const config = require('config')
  */
 const Package = require('./package.json')
 
-const DEVELOPMENT = 'dev'
+const DEVELOPMENT = 'development'
 
 /**
  * exports array of plugins with configuration.
@@ -33,6 +33,13 @@ if (config.util.getEnv('NODE_ENV') === DEVELOPMENT) {
         info: {
           'title': Package.description,
           'version': Package.version
+        },
+        securityDefinitions: {
+          jwt: {
+            type: 'apiKey',
+            name: 'Authorization',
+            in: 'header'
+          }
         },
         pathPrefixSize: 4
       }
