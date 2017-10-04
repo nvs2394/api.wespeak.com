@@ -1,4 +1,4 @@
-const {reponseHelper: {responseError, responseSuccess}} = require('../../helpers')
+const {reponseHelper: {responseError}} = require('../../helpers')
 const code = require('../../utils/code')
 const message = require('../../utils/message')
 
