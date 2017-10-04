@@ -3,8 +3,12 @@ const mongoose = require('mongoose')
 const User = mongoose.model('User')
 
 const getUserByUserId = async (id) => {
-  const user = User.findById(id).select('-isDelete -__v')
-  return user
+  try {
+    const user = User.findById(id).select('-isDelete -__v')
+    return user
+  } catch (error) {
+    throw new Error(error)
+  }
 }
 
 const createNewUser = async function (user) {
@@ -21,7 +25,7 @@ const createNewUser = async function (user) {
       return user
     })
     .then((ex) => {
-      console.log(ex)
+      throw new Error(ex)
     })
 }
 
@@ -33,28 +37,29 @@ const deleteUser = async function (id) {
 }
 
 const getUserByEmail = async (email) => {
-  const user = User.findOne({email})
-  user.then((data) => {
-    return data
-  }).then((ex) => {
-    console.log(ex)
-  })
+  try {
+    const user = await User.findOne({email})
+    return user
+  } catch (error) {
+    throw new Error(error)
+  }
 }
 
 const updateUserByUserId = async (userId, data) => {
   const {about, name, nativeLanguage} = data
-  const userUpdate = User.findByIdAndUpdate(userId, {
-    $set: {
-      about,
-      name,
-      nativeLanguage
-    }
-  }, { new: true })
-  userUpdate.then((user) => {
-    return user
-  }).then((ex) => {
-    console.log(ex)
-  })
+  try {
+    const userUpdate = await User.findByIdAndUpdate(userId, {
+      $set: {
+        about,
+        name,
+        nativeLanguage
+      }
+    }, { new: true, select: '-isDelete -__v' }).exec()
+
+    return userUpdate
+  } catch (error) {
+    throw new Error(error)
+  }
 }
 
 module.exports = {
