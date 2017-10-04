@@ -18,15 +18,12 @@ const createNewUser = async function (user) {
     avatarUrl: user.picture.data.url,
     scope: ['USER']
   })
-
-  const userSaved = newUser.save()
-  userSaved
-    .then((user) => {
-      return user
-    })
-    .then((ex) => {
-      throw new Error(ex)
-    })
+  try {
+    const userSaved = await newUser.save()
+    return userSaved
+  } catch (error) {
+    throw Error(error)
+  }
 }
 
 const deleteUser = async function (id) {

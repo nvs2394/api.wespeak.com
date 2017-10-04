@@ -7,11 +7,11 @@
     "jwtSecret": "This is we speak app"
   },
   "db": {
-    "host": "127.0.0.1",
+    "host": "35.188.157.198",
     "name": "wespeak",
     "port": "27017",
     "username": "wespeakuser",
-    "password": "wespeak2017@user"
+    "password": "wespeak2017%40user"
   },
   "fireBaseApi": {
     "apiKey": "OPEN_WEATHER_API_KEY"

@@ -10,7 +10,9 @@ const mongoose = require('mongoose')
 
 const server = require('./server')
 const logger = require('./server/utils/logger')
-const dbConnection = 'mongodb://' + `${config.get('db.host')}` + '/' + `${config.get('db.name')}`
+const dbUser = `${config.get('db.username')}:${config.get('db.password')}@`
+const dbConnection = 'mongodb://' + `${dbUser}` + `${config.get('db.host')}:` + `${config.get('db.port')}` + '/' + `${config.get('db.name')}`
+console.log(dbConnection)
 
 const gracefulStopServer = function () {
   // Wait 10 secs for existing connection to close and then exit.
@@ -56,7 +58,8 @@ const startServer = async function () {
  */
 mongoose.connect(dbConnection, {
   useMongoClient: true,
-  promiseLibrary: global.Promise
+  promiseLibrary: global.Promise,
+  uri_decode_auth: true
 })
 
 mongoose.connection.on('connected', () => {
