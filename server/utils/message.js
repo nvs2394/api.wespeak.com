@@ -1,4 +1,3 @@
 module.exports = {
-  'INTERNAL_ERROR': 'Internal server error',
-  'SUCCESS': 'Successfully'
+  'CAN_NOT_LOGIN': 'Can not login'
 }

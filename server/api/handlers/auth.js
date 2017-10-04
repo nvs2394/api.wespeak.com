@@ -1,3 +1,7 @@
+const { responseError } = require('../../helpers')
+const code = require('../../utils/code')
+const message = require('../../utils/message')
+
 const { fbLoginCtrl } = require('../controllers/authController')
 const { getUserByEmail, createNewUser } = require('../controllers/userController')
 const { genToken } = require('../../../libs/wespeakJwt')
@@ -10,24 +14,20 @@ const facebookSignin = async (request, reply) => {
       const userExist = await getUserByEmail(userInfo.email)
       if (userExist) {
         return reply({
-          token: genToken(userExist)
+          access_token: genToken(userExist)
         })
       }
       const newUser = await createNewUser(userInfo)
       if (newUser) {
         return reply({
-          token: genToken(userExist)
+          access_token: genToken(userExist)
         })
       }
-      return reply({
-        error: 'Something went wrong'
-      })
+      return reply(responseError(code.CAN_NOT_LOGIN, message.CAN_NOT_LOGIN, true))
     }
 
   } catch (error) {
-    return reply(
-      error
-    )
+    return reply(responseError(code.CAN_NOT_LOGIN, message.CAN_NOT_LOGIN, true))
   }
 }
 

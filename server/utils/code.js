@@ -1,4 +1,3 @@
 module.exports = {
-  'INTERNAL_ERROR': '500',
-  'SUCCESS': '200'
+  CAN_NOT_LOGIN: 11
 }

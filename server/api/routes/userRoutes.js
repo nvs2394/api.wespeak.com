@@ -13,9 +13,7 @@ const routes = []
 routes.push({
   path: API_PATH + '/user/{id}',
   method: 'GET',
-  handler: () => {
-
-  },
+  handler: userHandler.getUserByUserId,
   config: {
     tags: ['api'],
     validate: userValidations.getUserByUserId,
@@ -31,14 +29,13 @@ routes.push({
 routes.push({
   path: API_PATH + '/user',
   method: 'GET',
-  handler: () => {
-    console.log('get email')
-  },
+  handler: userHandler.getUserByEmail,
   config: {
     tags: ['api'],
     auth: {
       strategy: 'jwt'
-    }
+    },
+    validate: userValidations.getUserByEmail
   }
 })
 
@@ -48,12 +45,28 @@ routes.push({
 routes.push({
   path: API_PATH + '/user/profile',
   method: 'GET',
-  handler: userHandler.getUserByUserId,
+  handler: userHandler.getProfileByUserId,
   config: {
     tags: ['api'],
     auth: {
       strategy: 'jwt'
     }
+  }
+})
+
+/**
+ *PUT /user
+ */
+routes.push({
+  path: API_PATH + '/user',
+  method: 'PUT',
+  handler: userHandler.updateUser,
+  config: {
+    tags: ['api'],
+    auth: {
+      strategy: 'jwt'
+    },
+    validate: userValidations.updateUserInfo
   }
 })
 

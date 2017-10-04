@@ -27,6 +27,20 @@ const userValidations = {
     options: {
       allowUnknown: true
     }
+  },
+  /**
+   *GET /updateUser
+   */
+  updateUserInfo: {
+    headers: {},
+    payload: {
+      name: joi.string().trim().description('User name'),
+      about: joi.string().trim().description('Something about user'),
+      nativeLanguage: joi.string().trim().description('User native language')
+    },
+    options: {
+      allowUnknown: true
+    }
   }
 }
 

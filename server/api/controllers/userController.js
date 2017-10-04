@@ -34,12 +34,33 @@ const deleteUser = async function (id) {
 
 const getUserByEmail = async (email) => {
   const user = User.findOne({email})
-  return user
+  user.then((data) => {
+    return data
+  }).then((ex) => {
+    console.log(ex)
+  })
+}
+
+const updateUserByUserId = async (userId, data) => {
+  const {about, name, nativeLanguage} = data
+  const userUpdate = User.findByIdAndUpdate(userId, {
+    $set: {
+      about,
+      name,
+      nativeLanguage
+    }
+  }, { new: true })
+  userUpdate.then((user) => {
+    return user
+  }).then((ex) => {
+    console.log(ex)
+  })
 }
 
 module.exports = {
   getUserByUserId,
   createNewUser,
   deleteUser,
-  getUserByEmail
+  getUserByEmail,
+  updateUserByUserId
 }

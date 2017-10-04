@@ -1,11 +1,10 @@
 'use strict'
 
-const boom = require('boom')
 const httpStatus = require('http-status')
 const userController = require('../controllers/userController')
 const { responseSuccess, responseError } = require('../../helpers/reponseHelper')
 
-const getUserByUserId = async (req, reply) => {
+const getProfileByUserId = async (req, reply) => {
   const { userId } = req.auth.credentials
 
   try {
@@ -14,15 +13,53 @@ const getUserByUserId = async (req, reply) => {
       return reply(responseSuccess(httpStatus.OK, httpStatus[200], userProfile))
     }
   } catch (error) {
-    return reply(responseError(httpStatus.INTERNAL_SERVER_ERROR, error, httpStatus[500]))
+    return reply(responseError(httpStatus.INTERNAL_SERVER_ERROR, error, httpStatus[500], true))
   }
 }
 
-const getUserByEmail = async function (req, res) {
-  return res(boom.boomify('error', { statusCode: httpStatus.INTERNAL_SERVER_ERROR, message: 'errorMessage' }))
+const getUserByUserId = async (req, reply) => {
+  const userId = req.params.id
+
+  try {
+    const user = await userController.getUserByUserId(userId)
+    if (user) {
+      return reply(responseSuccess(httpStatus.OK, httpStatus[200], user))
+    }
+  } catch (error) {
+    return reply(responseError(httpStatus.INTERNAL_SERVER_ERROR, error, httpStatus[500], true))
+  }
+}
+
+const getUserByEmail = async function (req, reply) {
+  const email = req.query.email
+
+  try {
+    const user = await userController.getUserByEmail(email)
+    if (user) {
+      return reply(responseSuccess(httpStatus.OK, httpStatus[200], user))
+    }
+  } catch (error) {
+    return reply(responseError(httpStatus.INTERNAL_SERVER_ERROR, error, httpStatus[500], true))
+  }
+}
+
+const updateUser = async function (req, reply) {
+  const { userId } = req.auth.credentials
+  const data = req.payload
+
+  try {
+    const user = await userController.updateUserByUserId(userId, data)
+    if (user) {
+      return reply(responseSuccess(httpStatus.OK, httpStatus[200], user))
+    }
+  } catch (error) {
+    return reply(responseError(httpStatus.INTERNAL_SERVER_ERROR, error, httpStatus[500], true))
+  }
 }
 
 module.exports = {
   getUserByUserId,
-  getUserByEmail
+  getUserByEmail,
+  getProfileByUserId,
+  updateUser
 }
