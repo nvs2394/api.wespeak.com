@@ -58,8 +58,7 @@ const startServer = async function () {
  */
 mongoose.connect(dbConnection, {
   useMongoClient: true,
-  promiseLibrary: global.Promise,
-  uri_decode_auth: true
+  promiseLibrary: global.Promise
 })
 
 mongoose.connection.on('connected', () => {
