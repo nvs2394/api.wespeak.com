@@ -10,7 +10,13 @@ const validateJwt = (request, decodedToken, callback) => {
   User.findById(decodedToken._doc._id)
     .then((user) => {
       if (user) {
-        const credentials = {userId: user._id}
+        const credentials = {
+          email: user.email,
+          userId: user._id,
+          name: user.name,
+          status: user.status,
+          avatarUrl: user.avatarUrl
+        }
         return callback(null, true, credentials)
       }
 
