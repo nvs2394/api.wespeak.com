@@ -6,6 +6,11 @@ const { fbLoginCtrl } = require('../controllers/authController')
 const { getUserByEmail, createNewUser } = require('../controllers/userController')
 const { genToken } = require('../../../libs/wespeakJwt')
 
+/**
+ * 
+ * @param {*} request 
+ * @param {*} reply 
+ */
 const facebookSignin = async (request, reply) => {
   const accessToken = request.query.accessToken
   try {

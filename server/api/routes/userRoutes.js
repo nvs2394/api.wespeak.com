@@ -15,7 +15,7 @@ routes.push({
   method: 'GET',
   handler: userHandler.getUserByUserId,
   config: {
-    tags: ['api'],
+    tags: ['api', 'USER'],
     validate: userValidations.getUserByUserId,
     auth: {
       strategy: 'jwt'
@@ -31,7 +31,7 @@ routes.push({
   method: 'GET',
   handler: userHandler.getUserByEmail,
   config: {
-    tags: ['api'],
+    tags: ['api', 'USER'],
     auth: {
       strategy: 'jwt'
     },
@@ -40,14 +40,14 @@ routes.push({
 })
 
 /**
- *GET /user/profile
+ *PUSH /user/profile
  */
 routes.push({
   path: API_PATH + '/user/profile',
   method: 'GET',
   handler: userHandler.getProfileByUserId,
   config: {
-    tags: ['api'],
+    tags: ['api', 'USER'],
     auth: {
       strategy: 'jwt'
     }
@@ -62,7 +62,23 @@ routes.push({
   method: 'PUT',
   handler: userHandler.updateUser,
   config: {
-    tags: ['api'],
+    tags: ['api', 'USER'],
+    auth: {
+      strategy: 'jwt'
+    },
+    validate: userValidations.updateUserInfo
+  }
+})
+
+/**
+ *PUT /user/:id/status
+ */
+routes.push({
+  path: API_PATH + '/user/{id}/status',
+  method: 'PUT',
+  handler: userHandler.updateUser,
+  config: {
+    tags: ['api', 'USER'],
     auth: {
       strategy: 'jwt'
     },

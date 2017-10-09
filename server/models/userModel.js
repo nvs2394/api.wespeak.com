@@ -2,6 +2,9 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const listOfStatus = ['ONLINE', 'OFF_ONLINE', 'UNKNOW']
+/**
+ * User model || User information
+ */
 
 const UserSchema = new Schema({
   name: {

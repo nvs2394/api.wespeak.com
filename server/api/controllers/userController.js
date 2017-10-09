@@ -2,6 +2,10 @@
 const mongoose = require('mongoose')
 const User = mongoose.model('User')
 
+/**
+ * 
+ * @param {*} id 
+ */
 const getUserByUserId = async (id) => {
   try {
     const user = User.findById(id).select('-isDelete -__v')
@@ -11,6 +15,11 @@ const getUserByUserId = async (id) => {
   }
 }
 
+
+/**
+ * 
+ * @param {*} user 
+ */
 const createNewUser = async function (user) {
   const newUser = new User({
     email: user.email,
@@ -26,6 +35,10 @@ const createNewUser = async function (user) {
   }
 }
 
+/**
+ * 
+ * @param {*} id 
+ */
 const deleteUser = async function (id) {
   User.findByIdAndRemove(id)
     .then((isDelete) => {
@@ -33,6 +46,11 @@ const deleteUser = async function (id) {
     })
 }
 
+
+/**
+ * 
+ * @param {*} email 
+ */
 const getUserByEmail = async (email) => {
   try {
     const user = await User.findOne({email})
@@ -42,6 +60,12 @@ const getUserByEmail = async (email) => {
   }
 }
 
+
+/**
+ * 
+ * @param {*} userId 
+ * @param {*} data 
+ */
 const updateUserByUserId = async (userId, data) => {
   const {about, name, nativeLanguage} = data
   try {

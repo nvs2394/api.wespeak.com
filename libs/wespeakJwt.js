@@ -5,6 +5,12 @@ const config = require('config')
 const mongoose = require('mongoose')
 const User = mongoose.model('User')
 
+/**
+ * 
+ * @param {*} request 
+ * @param {*} decodedToken 
+ * @param {*} callback 
+ */
 const validateJwt = (request, decodedToken, callback) => {
   const error = ''
   User.findById(decodedToken._doc._id)
@@ -27,6 +33,10 @@ const validateJwt = (request, decodedToken, callback) => {
     })
 }
 
+/**
+ * 
+ * @param {*} data 
+ */
 const genToken = (data) => {
   console.log(data)
   const weSpeakToken = jwt.sign(data, config.get('app.jwtSecret'), {algorithm: 'HS256'})

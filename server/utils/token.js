@@ -3,6 +3,11 @@
 const jwt = require('jsonwebtoken')
 const secret = require('config').get('app.jwtSecret')
 
+/**
+ * 
+ * @param {*} user 
+ */
+
 const createToken = (user) => {
   let scopes
   // Check if the user object passed in

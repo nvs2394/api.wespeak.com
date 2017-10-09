@@ -14,6 +14,6 @@
     "password": "wespeak2017%40user"
   },
   "fireBaseApi": {
-    "apiKey": "OPEN_WEATHER_API_KEY"
+    "projectURL": "https://api-project-561826619057.firebaseio.com"
   }
 }
