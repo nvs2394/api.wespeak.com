@@ -4,19 +4,11 @@ const Conversation = mongoose.model('conversation')
 const _ = require('lodash')
 
 /**
- * findConversation
- */
-const findConversation = () => {
-  return true
-}
-
-/**
  * 
  * @param {*} userId 
  * @param {*} listUser 
  */
 const matchConversation = (userId, listUser) => {
-  console.log('listUser', listUser)
   const conversation = {
     caller: userId,
     partner: _.sample(listUser).user_id
@@ -30,6 +22,7 @@ const matchConversation = (userId, listUser) => {
  * @param {*} partnerId 
  */
 const saveConversationToLocalDB = async (callerId, partnerId, conversationOnFirebaseId) => {
+  console.log('callerId', callerId)
   const newConversation = new Conversation({
     userId: callerId,
     partnerId: partnerId,
@@ -42,15 +35,6 @@ const saveConversationToLocalDB = async (callerId, partnerId, conversationOnFire
   } catch (error) {
     throw Error(error)
   }
-}
-
-/**
- * 
- * @param {*} callerId 
- * @param {*} partnerId 
- */
-const saveConversationToFirebase = (callerId, partnerId) => {
-
 }
 
 const updateConversationToLocalDB = (conversationId, data) => {
@@ -70,8 +54,6 @@ const removeConversationOnFirebase = (conversationFirebaseId) => {
 }
 
 module.exports = {
-  findConversation,
-  saveConversationToFirebase,
   matchConversation,
   saveConversationToLocalDB,
   removeConversationOnFirebase,

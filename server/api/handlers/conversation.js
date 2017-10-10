@@ -32,7 +32,14 @@ const findConversation = async (req, reply) => {
         const availableConversation = firebase.availableConversation
           .addUserToAvailableConversation(matchConversation.caller, matchConversation.partner)
         if (availableConversation) {
-          return reply(matchConversation)
+          /**
+           * Save to Conversation Model
+           */
+          const newConversation = conversationCtrl
+            .saveConversationToLocalDB(matchConversation.caller, matchConversation.partner)
+          if (newConversation) {
+            return reply(newConversation)
+          }
         }
         return reply(responseError(httpStatus.INTERNAL_SERVER_ERROR, httpStatus[500], true))
       }
