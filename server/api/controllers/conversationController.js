@@ -1,4 +1,6 @@
 'use strict'
+const mongoose = require('mongoose')
+const Conversation = mongoose.model('conversation')
 const _ = require('lodash')
 
 /**
@@ -14,9 +16,10 @@ const findConversation = () => {
  * @param {*} listUser 
  */
 const matchConversation = (userId, listUser) => {
+  console.log('listUser', listUser)
   const conversation = {
     caller: userId,
-    partner: _.sample(listUser)
+    partner: _.sample(listUser).user_id
   }
   return conversation
 }
@@ -26,8 +29,19 @@ const matchConversation = (userId, listUser) => {
  * @param {*} callerId 
  * @param {*} partnerId 
  */
-const saveConversationToLocalDB = (callerId, partnerId) => {
+const saveConversationToLocalDB = async (callerId, partnerId, conversationOnFirebaseId) => {
+  const newConversation = new Conversation({
+    userId: callerId,
+    partnerId: partnerId,
+    conversationOnFirebaseId: conversationOnFirebaseId
+  })
 
+  try {
+    const conversation = newConversation.save()
+    return conversation
+  } catch (error) {
+    throw Error(error)
+  }
 }
 
 /**
@@ -36,6 +50,10 @@ const saveConversationToLocalDB = (callerId, partnerId) => {
  * @param {*} partnerId 
  */
 const saveConversationToFirebase = (callerId, partnerId) => {
+
+}
+
+const updateConversationToLocalDB = (conversationId, data) => {
 
 }
 

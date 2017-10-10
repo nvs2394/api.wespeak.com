@@ -4,6 +4,7 @@ const httpStatus = require('http-status')
 const { responseError } = require('../../helpers/reponseHelper')
 const firebase = require('../../../libs/firebase')
 const _ = require('lodash')
+const conversationCtrl = require('../controllers/conversationController')
 
 /**
  * 
@@ -17,30 +18,27 @@ const findConversation = async (req, reply) => {
    * Add user_id to AvailableUser on firebase
     */
   try {
-    const userAvailable = await firebase.availableUser.getListAvailableUser(userId)
-    const isAvailable = userAvailable.filter((item) => item.user_id === userId.toString())
+    const userAvailables = await firebase.availableUser.getListAvailableUser()
+    const isAvailable = userAvailables.filter((item) => item.user_id === userId.toString())
 
-    if (!_.isEmpty(isAvailable)) {
+    if (_.isEmpty(isAvailable) && _.isEmpty(userAvailables)) {
       return reply(responseError(httpStatus.INTERNAL_SERVER_ERROR, httpStatus[500], true))
     } else {
       /**
-       * Add User to Firebase
+       * Match User 
        */
-      try {
-        const newUserAvailable = await firebase.availableUser.addUserToAvailableUser(userId)
-        if (newUserAvailable) {
-          /**
-           * Match User 
-           */
+      const matchConversation = await conversationCtrl.matchConversation(userId, userAvailables)
+      if (matchConversation) {
+        const availableConversation = firebase.availableConversation
+          .addUserToAvailableConversation(matchConversation.caller, matchConversation.partner)
+        if (availableConversation) {
+          return reply(matchConversation)
         }
-      } catch (error) {
+        return reply(responseError(httpStatus.INTERNAL_SERVER_ERROR, httpStatus[500], true))
       }
-      return reply(responseError(httpStatus.OK, httpStatus[200]))
     }
-
   } catch (error) {
-    console.log('vl')
-    return reply(responseError(httpStatus.INTERNAL_SERVER_ERROR, error, httpStatus[500], true))
+    return reply(responseError(httpStatus.INTERNAL_SERVER_ERROR, error, httpStatus[500]))
   }
 }
 

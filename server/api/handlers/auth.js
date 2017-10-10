@@ -1,10 +1,12 @@
 const {reponseHelper: {responseError}} = require('../../helpers')
 const code = require('../../utils/code')
 const message = require('../../utils/message')
-
 const { fbLoginCtrl } = require('../controllers/authController')
 const { getUserByEmail, createNewUser } = require('../controllers/userController')
 const { genToken } = require('../../../libs/wespeakJwt')
+
+const firebase = require('../../../libs/firebase')
+// const conversationCtrl = require('../controllers/conversationController')
 
 /**
  * 
@@ -20,16 +22,25 @@ const facebookSignin = async (request, reply) => {
         const userExist = await getUserByEmail(userInfo.email)
 
         if (userExist) {
-          return reply({
-            access_token: genToken(userExist)
-          })
+          const userId = userExist._id
+          const availableUser = firebase.availableUser.addUserToAvailableUser(userId.toString())
+          if (availableUser) {
+            return reply({
+              access_token: genToken(userExist)
+            })
+          }
+          return reply(responseError(code.CAN_NOT_LOGIN, message.CAN_NOT_LOGIN, true))
         }
         try {
           const newUser = await createNewUser(userInfo)
           if (newUser) {
-            return reply({
-              access_token: genToken(userExist)
-            })
+            const availableUser = firebase.availableUser.addUserToAvailableUser(newUser._id.toString())
+            if (availableUser) {
+              return reply({
+                access_token: genToken(userExist)
+              })
+            }
+            return reply(responseError(code.CAN_NOT_LOGIN, message.CAN_NOT_LOGIN, true))
           }
           return reply(responseError(code.CAN_NOT_LOGIN, message.CAN_NOT_LOGIN, true))
         } catch (error) {

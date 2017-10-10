@@ -1,5 +1,4 @@
-const firebase = require('./connection')()
-const _ = require('lodash')
+const firebase = require('./connection')
 
 const ref = firebase.database().ref()
 const availableUserRef = ref.child('available_user')

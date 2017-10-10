@@ -13,4 +13,4 @@ const init = () => {
   return firebase
 }
 
-module.exports = init
+module.exports = init()

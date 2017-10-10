@@ -5,7 +5,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const listOfStatus = ['DONE', 'CANCELD', 'CALLING']
+const listOfStatus = ['DONE', 'CANCELD', 'CALLING', 'WAITING', 'UNKNOW']
 const ConversationSchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
