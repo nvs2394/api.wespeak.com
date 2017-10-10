@@ -15,5 +15,9 @@
   },
   "fireBaseApi": {
     "projectURL": "https://api-project-561826619057.firebaseio.com"
+  },
+  "openTok": {
+    "apiKey": "",
+    "apiSecret" : ""
   }
 }

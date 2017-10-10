@@ -1,3 +1,4 @@
+'use strict'
 const firebase = require('./connection')
 
 const ref = firebase.database().ref()
