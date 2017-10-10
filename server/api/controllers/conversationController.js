@@ -38,24 +38,42 @@ const saveConversationToLocalDB = async (callerId, partnerId, conversationOnFire
 }
 
 const updateConversationToLocalDB = (conversationId, data) => {
-
-}
-
-const updateConversationOnFirebase = () => {
-
+  const { sessionId, userOTToken, partnerOTToken, status } = data
+  try {
+    const conversationUpdate = Conversation.findByIdAndUpdate(conversationId, {
+      $set: {
+        sessionId,
+        userOTToken,
+        partnerOTToken,
+        status
+      }
+    }, { new: true }).exec()
+    return conversationUpdate
+  } catch (error) {
+    throw new Error(error)
+  }
 }
 
 /**
  * 
  * @param {*} conversationFirebaseId 
  */
-const removeConversationOnFirebase = (conversationFirebaseId) => {
-
+const changeStatusConversation = (conversationId, status) => {
+  try {
+    const statusUpdate = Conversation.findByIdAndUpdate(conversationId, {
+      $set: {
+        status
+      }
+    }, { new: true }).exec()
+    return statusUpdate
+  } catch (error) {
+    throw new Error(error)
+  }
 }
 
 module.exports = {
   matchConversation,
   saveConversationToLocalDB,
-  removeConversationOnFirebase,
-  updateConversationOnFirebase
+  changeStatusConversation,
+  updateConversationToLocalDB
 }
