@@ -1,12 +1,15 @@
 'use strict'
 
 const httpStatus = require('http-status')
-const userController = require('../controllers/userController')
-const { responseSuccess, responseError } = require('../../helpers/reponseHelper')
-const code = require('../../utils/code')
-const message = require('../../utils/message')
+const { responseError } = require('../../helpers/reponseHelper')
 const firebase = require('../../../libs/firebase')
 const _ = require('lodash')
+
+/**
+ * 
+ * @param {*} req 
+ * @param {*} reply 
+ */
 
 const findConversation = async (req, reply) => {
   const { userId } = req.auth.credentials
@@ -27,7 +30,7 @@ const findConversation = async (req, reply) => {
         const newUserAvailable = await firebase.availableUser.addUserToAvailableUser(userId)
         if (newUserAvailable) {
           /**
-           * Match User
+           * Match User 
            */
         }
       } catch (error) {

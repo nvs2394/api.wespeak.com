@@ -29,6 +29,10 @@ const ConversationSchema = new Schema({
     type: String,
     default: ''
   },
+  conversationOnFirebaseId: {
+    type: String,
+    default: ''
+  },
   status: {
     type: String,
     enum: listOfStatus

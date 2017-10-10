@@ -15,7 +15,6 @@ const getUserByUserId = async (id) => {
   }
 }
 
-
 /**
  * 
  * @param {*} user 
@@ -46,7 +45,6 @@ const deleteUser = async function (id) {
     })
 }
 
-
 /**
  * 
  * @param {*} email 
@@ -59,7 +57,6 @@ const getUserByEmail = async (email) => {
     throw new Error(error)
   }
 }
-
 
 /**
  * 
