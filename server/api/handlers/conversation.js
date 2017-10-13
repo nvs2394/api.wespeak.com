@@ -38,6 +38,27 @@ const findConversation = async (req, reply) => {
           const newConversation = conversationCtrl
             .saveConversationToLocalDB(matchConversation.caller, matchConversation.partner)
           if (newConversation) {
+            /**
+             * Add conversation to firebase
+             */
+            const realTimeConversation = firebase.availableConversation
+              .addUserToAvailableConversation(newConversation.caller, newConversation.partner)
+            /**
+             * Get session from OpenTok
+             */
+
+            /**
+             * Get token by session from OpenTok
+             */
+
+            /**
+             * Save to Local DB
+             */
+
+            /**
+             * Save to firebaseDB
+             */
+            
             return reply(newConversation)
           }
         }
@@ -49,6 +70,11 @@ const findConversation = async (req, reply) => {
   }
 }
 
+const getHistoryConversationByUserId = () => {
+
+}
+
 module.exports = {
-  findConversation
+  findConversation,
+  getHistoryConversationByUserId
 }

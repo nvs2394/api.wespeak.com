@@ -6,6 +6,19 @@ const _ = require('lodash')
 /**
  * 
  * @param {*} userId 
+ */
+const getConversationByUserId = (userId) => {
+  try {
+    const conversations = Conversation.find({$or: [{userId: userId}, {partnerId: userId}]})
+    return conversations
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+/**
+ * 
+ * @param {*} userId 
  * @param {*} listUser 
  */
 const matchConversation = (userId, listUser) => {
@@ -72,6 +85,7 @@ const changeStatusConversation = (conversationId, status) => {
 }
 
 module.exports = {
+  getConversationByUserId,
   matchConversation,
   saveConversationToLocalDB,
   changeStatusConversation,

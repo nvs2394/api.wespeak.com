@@ -86,4 +86,19 @@ routes.push({
   }
 })
 
+/**
+ *PUSH /user/:id/conversation
+ */
+routes.push({
+  path: API_PATH + '/user/{id}/conversation',
+  method: 'GET',
+  handler: userHandler.getProfileByUserId,
+  config: {
+    tags: ['api', 'USER'],
+    auth: {
+      strategy: 'jwt'
+    }
+  }
+})
+
 module.exports = routes
