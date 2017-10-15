@@ -13,12 +13,12 @@ const User = mongoose.model('User')
  */
 const validateJwt = (request, decodedToken, callback) => {
   const error = ''
-  User.findById(decodedToken._doc._id)
+  User.findById(decodedToken.id)
     .then((user) => {
       if (user) {
         const credentials = {
           email: user.email,
-          userId: user._id,
+          userId: user.id,
           name: user.name,
           status: user.status,
           avatarUrl: user.avatarUrl

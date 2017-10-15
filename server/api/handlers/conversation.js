@@ -29,20 +29,20 @@ const findConversation = async (req, reply) => {
        */
       const matchConversation = await conversationCtrl.matchConversation(userId, userAvailables)
       if (matchConversation) {
-        const availableConversation = firebase.availableConversation
+        const availableConversation = await firebase.availableConversation
           .addUserToAvailableConversation(matchConversation.caller, matchConversation.partner)
         if (availableConversation) {
           /**
            * Save to Conversation Model
            */
-          const newConversation = conversationCtrl
+          const newConversation = await conversationCtrl
             .saveConversationToLocalDB(matchConversation.caller, matchConversation.partner)
           if (newConversation) {
             /**
              * Add conversation to firebase
              */
-            const realTimeConversation = firebase.availableConversation
-              .addUserToAvailableConversation(newConversation.caller, newConversation.partner)
+            // const realTimeConversation = await firebase.availableConversation
+            //   .addUserToAvailableConversation(newConversation.caller, newConversation.partner)
             /**
              * Get session from OpenTok
              */
@@ -58,8 +58,6 @@ const findConversation = async (req, reply) => {
             /**
              * Save to firebaseDB
              */
-            
-            return reply(newConversation)
           }
         }
         return reply(responseError(httpStatus.INTERNAL_SERVER_ERROR, httpStatus[500], true))

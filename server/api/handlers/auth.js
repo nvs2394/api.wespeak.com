@@ -20,13 +20,21 @@ const facebookSignin = async (request, reply) => {
     if (userInfo) {
       try {
         const userExist = await getUserByEmail(userInfo.email)
+        const payloadToken = {
+          id: userExist._id,
+          email: userExist.email,
+          scope: userExist.scope,
+          nativeLanguage: userExist.nativeLanguage,
+          name: userExist.name,
+          status: userExist.status
+        }
 
         if (userExist) {
           const userId = userExist._id
           const availableUser = firebase.availableUser.addUserToAvailableUser(userId.toString())
           if (availableUser) {
             return reply({
-              access_token: genToken(userExist)
+              access_token: genToken(payloadToken)
             })
           }
           return reply(responseError(code.CAN_NOT_LOGIN, message.CAN_NOT_LOGIN, true))
@@ -37,7 +45,7 @@ const facebookSignin = async (request, reply) => {
             const availableUser = firebase.availableUser.addUserToAvailableUser(newUser._id.toString())
             if (availableUser) {
               return reply({
-                access_token: genToken(userExist)
+                access_token: genToken(payloadToken)
               })
             }
             return reply(responseError(code.CAN_NOT_LOGIN, message.CAN_NOT_LOGIN, true))

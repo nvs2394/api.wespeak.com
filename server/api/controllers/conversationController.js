@@ -36,6 +36,7 @@ const matchConversation = (userId, listUser) => {
  */
 const saveConversationToLocalDB = async (callerId, partnerId, conversationOnFirebaseId) => {
   console.log('callerId', callerId)
+  console.log('partnerId', partnerId)
   const newConversation = new Conversation({
     userId: callerId,
     partnerId: partnerId,
