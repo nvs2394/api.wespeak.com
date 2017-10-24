@@ -2,16 +2,14 @@
 const opentok = require('./connection')
 
 const creatingSession = () => {
+  console.log('creatingSession')
   return new Promise((resolve, reject) => {
-    opentok.createSession()
-      .then((session) => {
-        return {
-          sessionId: session.sessionId
-        }
-      })
-      .then((err) => {
-        throw new Error(err)
-      })
+    opentok.createSession((err, session) => {
+      if (err) {
+        return reject(err)
+      }
+      return resolve(session)
+    })
   })
 }
 

@@ -19,10 +19,11 @@ const getListAvailableConversation = () => {
  * @param {*} userId 
  */
 const addUserToAvailableConversation = (userId, partnerId) => {
+  console.log(userId.toString())
   return new Promise((resolve, reject) => {
     availableConversationRef.push({
-      user_id: userId.toString(),
-      partner_id: partnerId.toString(),
+      user_id: userId,
+      partner_id: partnerId,
       status: 'CALLING'
     }).then(resolve, reject)
   })

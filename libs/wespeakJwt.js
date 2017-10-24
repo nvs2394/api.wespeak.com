@@ -38,7 +38,6 @@ const validateJwt = (request, decodedToken, callback) => {
  * @param {*} data 
  */
 const genToken = (data) => {
-  console.log(data)
   const weSpeakToken = jwt.sign(data, config.get('app.jwtSecret'), {algorithm: 'HS256'})
   return weSpeakToken
 }

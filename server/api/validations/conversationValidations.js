@@ -4,7 +4,7 @@ const joi = require('joi')
 const conversationValidations = {
 
   /**
-   *GET /getUserByUserId
+   *POST /findConversation
    */
   findConversation: {
     headers: {},
@@ -13,12 +13,12 @@ const conversationValidations = {
     }
   },
   /**
-   *GET /getUserByEmail
+   *POST /makeConversation
    */
-  getUserByEmail: {
+  makeConversation: {
     headers: {},
-    query: {
-      email: joi.string().trim().required().description('Email of user you want to fetch')
+    payload: {
+      conversationId: joi.string().trim().description('Conversation Id')
     },
     options: {
       allowUnknown: true
@@ -27,12 +27,10 @@ const conversationValidations = {
   /**
    *GET /updateUser
    */
-  updateUserInfo: {
+  getTokenId: {
     headers: {},
     payload: {
-      name: joi.string().trim().description('User name'),
-      about: joi.string().trim().description('Something about user'),
-      nativeLanguage: joi.string().trim().description('User native language')
+      sessionId: joi.string().trim().description('Session of OpenTok')
     },
     options: {
       allowUnknown: true

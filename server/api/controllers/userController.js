@@ -66,14 +66,13 @@ const getUserByEmail = async (email) => {
 const updateUserByUserId = async (userId, data) => {
   const {about, name, nativeLanguage} = data
   try {
-    const userUpdate = await User.findByIdAndUpdate(userId, {
-      $set: {
-        about,
-        name,
-        nativeLanguage
-      }
-    }, { new: true, select: '-isDelete -__v' }).exec()
-
+    const userUpdate = User.findById(userId).exec()
+    userUpdate.then((user) => {
+      user.about = about || user.about
+      user.name = name || user.name
+      user.nativeLanguage = nativeLanguage || user.nativeLanguage
+      user.save()
+    })
     return userUpdate
   } catch (error) {
     throw new Error(error)

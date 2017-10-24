@@ -30,6 +30,8 @@ const ReviewSchema = new Schema({
     type: Number,
     default: defaultRatingNumber
   }
+}, {
+  timestamps: true
 })
 
 const review = mongoose.model('review', ReviewSchema)

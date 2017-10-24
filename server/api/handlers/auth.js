@@ -20,16 +20,16 @@ const facebookSignin = async (request, reply) => {
     if (userInfo) {
       try {
         const userExist = await getUserByEmail(userInfo.email)
-        const payloadToken = {
-          id: userExist._id,
-          email: userExist.email,
-          scope: userExist.scope,
-          nativeLanguage: userExist.nativeLanguage,
-          name: userExist.name,
-          status: userExist.status
-        }
-
+        let payloadToken = ''
         if (userExist) {
+          payloadToken = {
+            id: userExist._id,
+            email: userExist.email,
+            scope: userExist.scope,
+            nativeLanguage: userExist.nativeLanguage,
+            name: userExist.name,
+            status: userExist.status
+          }
           const userId = userExist._id
           const availableUser = firebase.availableUser.addUserToAvailableUser(userId.toString())
           if (availableUser) {

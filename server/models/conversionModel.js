@@ -10,12 +10,12 @@ const ConversationSchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: 'Users'
+    ref: 'User'
   },
   partnerId: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: 'Users'
+    ref: 'User'
   },
   sessionId: {
     type: String,
@@ -35,8 +35,11 @@ const ConversationSchema = new Schema({
   },
   status: {
     type: String,
-    enum: listOfStatus
+    enum: listOfStatus,
+    default: listOfStatus[3]
   }
+}, {
+  timestamps: true
 })
 
 const conversation = mongoose.model('conversation', ConversationSchema)

@@ -3,6 +3,7 @@
 const httpStatus = require('http-status')
 const { responseError } = require('../../helpers/reponseHelper')
 const firebase = require('../../../libs/firebase')
+const { openTokManagement } = require('../../../libs/opentok/index')
 const _ = require('lodash')
 const conversationCtrl = require('../controllers/conversationController')
 
@@ -14,9 +15,6 @@ const conversationCtrl = require('../controllers/conversationController')
 
 const findConversation = async (req, reply) => {
   const { userId } = req.auth.credentials
-  /**
-   * Add user_id to AvailableUser on firebase
-    */
   try {
     const userAvailables = await firebase.availableUser.getListAvailableUser()
     const isAvailable = userAvailables.filter((item) => item.user_id === userId.toString())
@@ -39,25 +37,10 @@ const findConversation = async (req, reply) => {
             .saveConversationToLocalDB(matchConversation.caller, matchConversation.partner)
           if (newConversation) {
             /**
-             * Add conversation to firebase
+             * GET Conversation detail
              */
-            // const realTimeConversation = await firebase.availableConversation
-            //   .addUserToAvailableConversation(newConversation.caller, newConversation.partner)
-            /**
-             * Get session from OpenTok
-             */
-
-            /**
-             * Get token by session from OpenTok
-             */
-
-            /**
-             * Save to Local DB
-             */
-
-            /**
-             * Save to firebaseDB
-             */
+            const conversationDetail = await conversationCtrl.getConversationById(newConversation._id)
+            return reply(conversationDetail)
           }
         }
         return reply(responseError(httpStatus.INTERNAL_SERVER_ERROR, httpStatus[500], true))
@@ -68,11 +51,59 @@ const findConversation = async (req, reply) => {
   }
 }
 
-const getHistoryConversationByUserId = () => {
+const makeConversation = async (req, reply) => {
+  const conversationId = req.payload.conversationId
+  /**
+   * Create session
+   */
+  const session = await openTokManagement.creatingSession()
+  /**
+   * Generate tokenId from sessionId for Caller & Partner
+   */
+  const tokenCaller = await openTokManagement.generatingToken(session.sessionId)
+  const tokenPartner = await openTokManagement.generatingToken(session.sessionId)
+  /**
+   * Save to Firebase &  change status to CALLING
+   */
 
+  /**
+   * Save to LocalDB &  change status to CALLING
+   */
+  return reply({
+    tokenCaller: tokenCaller.token,
+    tokenPartner: tokenPartner.token,
+    sessionId: session.sessionId
+  })
+}
+
+const generateSession = async (req, reply) => {
+  try {
+    const session = await openTokManagement.creatingSession()
+    return reply({
+      sessionId: session.sessionId
+    })
+  } catch (error) {
+    return reply({
+      err: new Error(error.message)
+    })
+  }
+}
+
+const generateToken = async (req, reply) => {
+  try {
+    const sessionId = req.payload.sessionId
+    const token = await openTokManagement.generatingToken(sessionId)
+    return reply(token)
+  } catch (error) {
+    return reply({
+      err: new Error(error.message)
+    })
+  }
 }
 
 module.exports = {
   findConversation,
-  getHistoryConversationByUserId
+  generateSession,
+  generateToken,
+  makeConversation
 }

@@ -35,8 +35,6 @@ const matchConversation = (userId, listUser) => {
  * @param {*} partnerId 
  */
 const saveConversationToLocalDB = async (callerId, partnerId, conversationOnFirebaseId) => {
-  console.log('callerId', callerId)
-  console.log('partnerId', partnerId)
   const newConversation = new Conversation({
     userId: callerId,
     partnerId: partnerId,
@@ -85,10 +83,24 @@ const changeStatusConversation = (conversationId, status) => {
   }
 }
 
+const getConversationById = (conversationId) => {
+  try {
+    const selectField = ['name', 'avatarUrl', 'nativeLanguage']
+    const conversation = Conversation.findById(conversationId)
+      .populate({path: 'userId', select: selectField})
+      .populate({path: 'partnerId', select: selectField})
+      .select('userId partnerId status')
+    return conversation
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 module.exports = {
   getConversationByUserId,
   matchConversation,
   saveConversationToLocalDB,
   changeStatusConversation,
-  updateConversationToLocalDB
+  updateConversationToLocalDB,
+  getConversationById
 }

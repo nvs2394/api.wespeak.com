@@ -41,6 +41,8 @@ const UserSchema = new Schema({
     default: 'UNKNOW'
   },
   scope: [String]
+}, {
+  timestamps: true
 })
 
 const user = mongoose.model('User', UserSchema)
