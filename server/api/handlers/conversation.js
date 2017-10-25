@@ -1,11 +1,13 @@
 'use strict'
 
 const httpStatus = require('http-status')
+const _ = require('lodash')
 const { responseError } = require('../../helpers/reponseHelper')
 const firebase = require('../../../libs/firebase')
 const { openTokManagement } = require('../../../libs/opentok/index')
-const _ = require('lodash')
 const conversationCtrl = require('../controllers/conversationController')
+const Constant = require('../../utils/constant')
+
 
 /**
  * 
@@ -51,6 +53,11 @@ const findConversation = async (req, reply) => {
   }
 }
 
+/**
+ * 
+ * @param {*} req 
+ * @param {*} reply 
+ */
 const makeConversation = async (req, reply) => {
   const conversationId = req.payload.conversationId
   /**
@@ -69,11 +76,14 @@ const makeConversation = async (req, reply) => {
   /**
    * Save to LocalDB &  change status to CALLING
    */
-  return reply({
-    tokenCaller: tokenCaller.token,
-    tokenPartner: tokenPartner.token,
-    sessionId: session.sessionId
-  })
+  const data = {
+    sessionId: session.sessionId,
+    userOTToken: tokenCaller.token,
+    partnerOTToken: tokenPartner.token,
+    status: Constant.CONVERSATION_STATUS.CALLING
+  }
+  const conversationUpdated = await conversationCtrl.updateConversationToLocalDB(conversationId, data)
+  return reply(conversationUpdated)
 }
 
 const generateSession = async (req, reply) => {
