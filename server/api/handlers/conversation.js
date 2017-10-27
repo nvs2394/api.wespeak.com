@@ -2,12 +2,13 @@
 
 const httpStatus = require('http-status')
 const _ = require('lodash')
-const { responseError } = require('../../helpers/reponseHelper')
+const { responseError, responseSuccess } = require('../../helpers/reponseHelper')
 const firebase = require('../../../libs/firebase')
 const { openTokManagement } = require('../../../libs/opentok/index')
 const conversationCtrl = require('../controllers/conversationController')
 const Constant = require('../../utils/constant')
-
+const code = require('../../utils/code')
+const message = require('../../utils/message')
 
 /**
  * 
@@ -29,23 +30,26 @@ const findConversation = async (req, reply) => {
        */
       const matchConversation = await conversationCtrl.matchConversation(userId, userAvailables)
       if (matchConversation) {
-        const availableConversation = await firebase.availableConversation
+        console.log('availableConversationId then')
+        const conversationOnFirebaseId = await firebase.availableConversation
           .addUserToAvailableConversation(matchConversation.caller, matchConversation.partner)
-        if (availableConversation) {
+        if (conversationOnFirebaseId) {
           /**
            * Save to Conversation Model
            */
           const newConversation = await conversationCtrl
-            .saveConversationToLocalDB(matchConversation.caller, matchConversation.partner)
+            .saveConversationToLocalDB(matchConversation.caller, matchConversation.partner, conversationOnFirebaseId)
           if (newConversation) {
             /**
              * GET Conversation detail
              */
             const conversationDetail = await conversationCtrl.getConversationById(newConversation._id)
-            return reply(conversationDetail)
+            if (conversationDetail) {
+              return reply(responseSuccess(httpStatus.OK, httpStatus[200], conversationDetail))
+            }
           }
         }
-        return reply(responseError(httpStatus.INTERNAL_SERVER_ERROR, httpStatus[500], true))
+        return reply(responseError(code.CAN_NOT_MATCH_CONVERSATION, message.CAN_NOT_MATCH_CONVERSATION, true))
       }
     }
   } catch (error) {
@@ -59,61 +63,91 @@ const findConversation = async (req, reply) => {
  * @param {*} reply 
  */
 const makeConversation = async (req, reply) => {
-  const conversationId = req.payload.conversationId
-  /**
-   * Create session
-   */
-  const session = await openTokManagement.creatingSession()
-  /**
-   * Generate tokenId from sessionId for Caller & Partner
-   */
-  const tokenCaller = await openTokManagement.generatingToken(session.sessionId)
-  const tokenPartner = await openTokManagement.generatingToken(session.sessionId)
-  /**
-   * Save to Firebase &  change status to CALLING
-   */
-
-  /**
-   * Save to LocalDB &  change status to CALLING
-   */
-  const data = {
-    sessionId: session.sessionId,
-    userOTToken: tokenCaller.token,
-    partnerOTToken: tokenPartner.token,
-    status: Constant.CONVERSATION_STATUS.CALLING
+  try {
+    const conversationId = req.payload.conversationId
+    const { conversationOnFirebaseId } = await conversationCtrl.getConversationById(conversationId)
+    /**
+     * Create session
+     */
+    const session = await openTokManagement.creatingSession()
+    /**
+     * Generate tokenId from sessionId for Caller & Partner
+     */
+    const tokenCaller = await openTokManagement.generatingToken(session.sessionId)
+    const tokenPartner = await openTokManagement.generatingToken(session.sessionId)
+    /**
+     * Save to LocalDB &  change status to CALLING
+     */
+    const data = {
+      sessionId: session.sessionId,
+      userOTToken: tokenCaller.token,
+      partnerOTToken: tokenPartner.token,
+      status: Constant.CONVERSATION_STATUS.CALLING
+    }
+    const conversationUpdated = await conversationCtrl.updateConversationToLocalDB(conversationId, data)
+    if (conversationUpdated) {
+      /**
+        * Save to Firebase &  change status to CALLING
+        */
+      const availableUpdated = firebase.availableConversation.updateAvailableConversation(conversationOnFirebaseId, data)
+      if (availableUpdated) {
+        return reply(responseSuccess(httpStatus.OK, httpStatus[200], conversationUpdated))
+      }
+      return reply(responseError(code.CAN_NOT_MAKE_CALLING, message.CAN_NOT_MAKE_CALLING, true))
+    }
+  } catch (error) {
+    return reply(responseError(httpStatus.INTERNAL_SERVER_ERROR, error, httpStatus[500]))
   }
-  const conversationUpdated = await conversationCtrl.updateConversationToLocalDB(conversationId, data)
-  return reply(conversationUpdated)
 }
 
-const generateSession = async (req, reply) => {
+/**
+ * 
+ * @param {*} req 
+ * @param {*} reply 
+ */
+const stopConversation = async (req, reply) => {
+  const conversationId = req.params.conversationId
   try {
-    const session = await openTokManagement.creatingSession()
-    return reply({
-      sessionId: session.sessionId
-    })
+    /**
+     * Find conversation by conversationId
+     */
+    const { conversationOnFirebaseId } = await conversationCtrl.getConversationById(conversationId)
+    /**
+     * Update status on Firebase
+     */
+    const status = req.payload.status || Constant.CONVERSATION_STATUS.DONE
+    const availableUpdated = firebase.availableConversation.updateAvailableConversation(conversationOnFirebaseId, { status: status })
+    if (availableUpdated) {
+      const conversationUpdated = await conversationCtrl.changeStatusConversation(conversationId, status)
+      if (conversationUpdated) {
+        return reply(responseSuccess(httpStatus.OK, httpStatus[200], conversationUpdated))
+      }
+      return reply(responseError(httpStatus.INTERNAL_SERVER_ERROR, httpStatus[500], true))
+    }
+    return reply(responseError(code.CONVERSATION_NOT_FOUND, message.CAN_NOT_MAKE_CALLING, true))
   } catch (error) {
-    return reply({
-      err: new Error(error.message)
-    })
+    return reply(responseError(httpStatus.INTERNAL_SERVER_ERROR, error, httpStatus[500]))
   }
 }
 
 const generateToken = async (req, reply) => {
-  try {
-    const sessionId = req.payload.sessionId
-    const token = await openTokManagement.generatingToken(sessionId)
-    return reply(token)
-  } catch (error) {
-    return reply({
-      err: new Error(error.message)
-    })
+  const conversationOnFirebaseId = req.payload.fbId
+  const data = {
+    sessionId: req.payload.sessionId,
+    userOTToken: req.payload.userOTToken,
+    partnerOTToken: req.payload.partnerOTToken,
+    status: req.payload.status
   }
+  console.log(data)
+  const updated = firebase.availableConversation.updateAvailableConversation(conversationOnFirebaseId, data)
+  return reply({
+    updated
+  })
 }
 
 module.exports = {
   findConversation,
-  generateSession,
+  stopConversation,
   generateToken,
   makeConversation
 }

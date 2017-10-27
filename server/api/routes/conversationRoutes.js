@@ -2,7 +2,6 @@
 const Config = require('config')
 const { conversationValidations } = require('../validations')
 const conversationHandler = require('../handlers/conversation')
-
 const API_PATH = Config.get('app.apiRoot')
 
 const routes = []
@@ -40,30 +39,15 @@ routes.push({
 })
 
 /**
- *POST /sessionId
+ *POST /stopConversation
  */
 routes.push({
-  path: API_PATH + '/conversation/session',
-  method: 'POST',
-  handler: conversationHandler.generateSession,
+  path: API_PATH + '/conversation/{conversationId}/stop',
+  method: 'PUT',
+  handler: conversationHandler.stopConversation,
   config: {
     tags: ['api', 'Conversation'],
-    auth: {
-      strategy: 'jwt'
-    }
-  }
-})
-
-/**
- *POST /tokenId
- */
-routes.push({
-  path: API_PATH + '/conversation/token',
-  method: 'POST',
-  handler: conversationHandler.generateToken,
-  config: {
-    tags: ['api', 'Conversation'],
-    validate: conversationValidations.getTokenId,
+    validate: conversationValidations.stopConversation,
     auth: {
       strategy: 'jwt'
     }

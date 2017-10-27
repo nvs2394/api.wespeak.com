@@ -11,7 +11,7 @@ const User = mongoose.model('User')
  * @param {*} decodedToken 
  * @param {*} callback 
  */
-const validateJwt = (request, decodedToken, callback) => {
+const validateJwt = async (request, decodedToken, callback) => {
   const error = ''
   User.findById(decodedToken.id)
     .then((user) => {

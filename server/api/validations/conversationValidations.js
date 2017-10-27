@@ -25,12 +25,15 @@ const conversationValidations = {
     }
   },
   /**
-   *GET /updateUser
+   *POST /stopConversation
    */
-  getTokenId: {
+  stopConversation: {
     headers: {},
+    params: {
+      conversationId: joi.string().trim().required().description('Id of Conversation you want to change status to DONE')
+    },
     payload: {
-      sessionId: joi.string().trim().description('Session of OpenTok')
+      status: joi.string().trim().description('status = DONE')
     },
     options: {
       allowUnknown: true
