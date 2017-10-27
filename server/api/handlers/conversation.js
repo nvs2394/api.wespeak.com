@@ -130,8 +130,24 @@ const stopConversation = async (req, reply) => {
   }
 }
 
+const generateToken = async (req, reply) => {
+  const conversationOnFirebaseId = req.payload.fbId
+  const data = {
+    sessionId: req.payload.sessionId,
+    userOTToken: req.payload.userOTToken,
+    partnerOTToken: req.payload.partnerOTToken,
+    status: req.payload.status
+  }
+  console.log(data)
+  const updated = firebase.availableConversation.updateAvailableConversation(conversationOnFirebaseId, data)
+  return reply({
+    updated
+  })
+}
+
 module.exports = {
   findConversation,
   stopConversation,
+  generateToken,
   makeConversation
 }
