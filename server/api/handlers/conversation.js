@@ -1,12 +1,23 @@
 'use strict'
-
+/**
+ * External modules
+ */
 const httpStatus = require('http-status')
 const _ = require('lodash')
 const ObjectId = require('mongodb').ObjectID
+
+/**
+ * Controllers
+ */
+const conversationCtrl = require('../controllers/conversationController')
+const reviewCtrl = require('../controllers/reviewController')
+
+/**
+ * Internal libs
+ */
 const { responseError, responseSuccess } = require('../../helpers/reponseHelper')
 const firebase = require('../../../libs/firebase')
 const { openTokManagement } = require('../../../libs/opentok/index')
-const conversationCtrl = require('../controllers/conversationController')
 const Constant = require('../../utils/constant')
 const code = require('../../utils/code')
 const message = require('../../utils/message')
@@ -132,7 +143,6 @@ const stopConversation = async (req, reply) => {
 }
 
 const getHistoryConversation = async (req, reply) => {
-  console.log(req.auth.credentials)
   const userId = new ObjectId(req.auth.credentials.userId)
   /**
    * get all converation with status DONE
@@ -151,9 +161,25 @@ const getHistoryConversation = async (req, reply) => {
   }
 }
 
+const reviewConversation = async (req, reply) => {
+  const conversationId = req.params.conversationId
+  const reviewerId = req.auth.credentials.userId
+  const { partnerStar, qualityStar, comment } = req.payload
+  try {
+    const review = await reviewCtrl.createReview({conversationId, qualityStar, partnerStar, comment, reviewerId})
+    if (review) {
+      return reply(responseSuccess(httpStatus.OK, httpStatus[200], review))
+    }
+    return reply(responseError(httpStatus.INTERNAL_SERVER_ERROR, httpStatus[500], true))
+  } catch (error) {
+    return reply(responseError(httpStatus.INTERNAL_SERVER_ERROR, error, httpStatus[500]))
+  }
+}
+
 module.exports = {
   findConversation,
   stopConversation,
   getHistoryConversation,
-  makeConversation
+  makeConversation,
+  reviewConversation
 }

@@ -54,4 +54,20 @@ routes.push({
   }
 })
 
+/**
+ *POST /ratingConversation
+ */
+routes.push({
+  path: API_PATH + '/conversation/{conversationId}/rating',
+  method: 'PUT',
+  handler: conversationHandler.reviewConversation,
+  config: {
+    tags: ['api', 'Conversation'],
+    validate: conversationValidations.ratingConversation,
+    auth: {
+      strategy: 'jwt'
+    }
+  }
+})
+
 module.exports = routes

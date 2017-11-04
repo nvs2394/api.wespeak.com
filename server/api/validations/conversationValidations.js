@@ -38,6 +38,23 @@ const conversationValidations = {
     options: {
       allowUnknown: true
     }
+  },
+  /**
+   *POST /ratingConversation
+   */
+  ratingConversation: {
+    headers: {},
+    params: {
+      conversationId: joi.string().trim().required().description('Id of Conversation you want to change status to DONE')
+    },
+    payload: {
+      partnerStar: joi.number().min(1).max(5).description('Review partner can be from 1 to 5'),
+      qualityStar: joi.number().min(1).max(5).description('Review quality can be from 1 to 5'),
+      comment: joi.string().trim().allow('').description('Comment for reivew')
+    },
+    options: {
+      allowUnknown: true
+    }
   }
 }
 
