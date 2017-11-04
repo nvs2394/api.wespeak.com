@@ -2,6 +2,7 @@
 const Config = require('config')
 const { userValidations } = require('../validations')
 const userHandler = require('../handlers/user')
+const conversationHandler = require('../handlers/conversation')
 
 const API_PATH = Config.get('app.apiRoot')
 
@@ -89,16 +90,16 @@ routes.push({
 /**
  *PUSH /user/:id/conversations
  */
-// routes.push({
-//   path: API_PATH + '/user/{id}/conversation',
-//   method: 'GET',
-//   handler: userHandler.getProfileByUserId,
-//   config: {
-//     tags: ['api', 'USER'],
-//     auth: {
-//       strategy: 'jwt'
-//     }
-//   }
-// })
+routes.push({
+  path: API_PATH + '/user/{id}/conversations',
+  method: 'GET',
+  handler: conversationHandler.getHistoryConversation,
+  config: {
+    tags: ['api', 'USER'],
+    auth: {
+      strategy: 'jwt'
+    }
+  }
+})
 
 module.exports = routes

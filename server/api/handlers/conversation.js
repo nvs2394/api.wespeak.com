@@ -2,6 +2,7 @@
 
 const httpStatus = require('http-status')
 const _ = require('lodash')
+const ObjectId = require('mongodb').ObjectID
 const { responseError, responseSuccess } = require('../../helpers/reponseHelper')
 const firebase = require('../../../libs/firebase')
 const { openTokManagement } = require('../../../libs/opentok/index')
@@ -130,24 +131,29 @@ const stopConversation = async (req, reply) => {
   }
 }
 
-const generateToken = async (req, reply) => {
-  const conversationOnFirebaseId = req.payload.fbId
-  const data = {
-    sessionId: req.payload.sessionId,
-    userOTToken: req.payload.userOTToken,
-    partnerOTToken: req.payload.partnerOTToken,
-    status: req.payload.status
+const getHistoryConversation = async (req, reply) => {
+  console.log(req.auth.credentials)
+  const userId = new ObjectId(req.auth.credentials.userId)
+  /**
+   * get all converation with status DONE
+   */
+  const filter = {
+    status: Constant.CONVERSATION_STATUS.DONE
   }
-  console.log(data)
-  const updated = firebase.availableConversation.updateAvailableConversation(conversationOnFirebaseId, data)
-  return reply({
-    updated
-  })
+  try {
+    const conversations = await conversationCtrl.getConversationByFilter({userId, ...filter})
+    if (conversations) {
+      return reply(responseSuccess(httpStatus.OK, httpStatus[200], conversations))
+    }
+    return reply(responseError(httpStatus.INTERNAL_SERVER_ERROR, httpStatus[500], true))
+  } catch (error) {
+    return reply(responseError(httpStatus.INTERNAL_SERVER_ERROR, error, httpStatus[500]))
+  }
 }
 
 module.exports = {
   findConversation,
   stopConversation,
-  generateToken,
+  getHistoryConversation,
   makeConversation
 }

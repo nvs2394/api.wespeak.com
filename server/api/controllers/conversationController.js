@@ -19,6 +19,24 @@ const getConversationByUserId = (userId) => {
 /**
  * 
  * @param {*} userId 
+ */
+const getConversationByFilter = ({userId, ...filter}) => {
+  const selectField = ['name', 'avatarUrl', 'nativeLanguage']
+  try {
+    const conversations = Conversation
+      .find({$or: [{userId: userId}, {partnerId: userId}], ...filter})
+      .populate({path: 'userId', select: selectField})
+      .populate({path: 'partnerId', select: selectField})
+      .select('-conversationOnFirebaseId -partnerOTToken -userOTToken -sessionId')
+    return conversations
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+/**
+ * 
+ * @param {*} userId 
  * @param {*} listUser 
  */
 const matchConversation = (userId, listUser) => {
@@ -102,5 +120,6 @@ module.exports = {
   saveConversationToLocalDB,
   changeStatusConversation,
   updateConversationToLocalDB,
-  getConversationById
+  getConversationById,
+  getConversationByFilter
 }
