@@ -40,9 +40,10 @@ const getConversationByFilter = ({userId, ...filter}) => {
  * @param {*} listUser 
  */
 const matchConversation = (userId, listUser) => {
+  const newList = _.filter(listUser, (user) => user.user_id !== userId)
   const conversation = {
     caller: userId,
-    partner: _.sample(listUser).user_id
+    partner: _.sample(newList).user_id
   }
   return conversation
 }
