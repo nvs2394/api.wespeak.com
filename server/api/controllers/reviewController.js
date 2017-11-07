@@ -22,10 +22,20 @@ const createReview = ({conversationId, ...rest}) => {
     const newReview = review.save()
     return newReview
   } catch (error) {
-    throw Error(error)
+    throw new Error(error)
+  }
+}
+
+const getReviewsByConversationId = (conversationId) => {
+  try {
+    const reviews = Review.where('conversationId').in(conversationId)
+    return reviews
+  } catch (error) {
+    throw new Error(error)
   }
 }
 
 module.exports = {
-  createReview
+  createReview,
+  getReviewsByConversationId
 }

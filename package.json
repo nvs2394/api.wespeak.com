@@ -39,7 +39,7 @@
     "inherits": "^2.0.3",
     "joi": "10.6.0",
     "lodash": "^4.17.4",
-    "mongoose": "^4.11.13",
+    "mongoose": "^4.13.0",
     "newrelic": "2.2.0",
     "opentok": "^2.6.0",
     "request-promise": "^4.2.2",
