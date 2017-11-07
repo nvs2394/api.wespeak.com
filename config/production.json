@@ -7,9 +7,11 @@
     "jwtSecret": "This is we speak app"
   },
   "db": {
-    "host": "localhost",
+    "host": "35.188.157.198",
     "name": "wespeak",
-    "port": "27017"
+    "port": "27017",
+    "username": "wespeakuser",
+    "password": "wespeak2017%40user"
   },
   "fireBaseApi": {
     "projectURL": "https://api-project-561826619057.firebaseio.com"
