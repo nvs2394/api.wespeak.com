@@ -7,7 +7,7 @@ RUN mkdir /app
 #make /app as the working directory
 WORKDIR /app
 
-COPY package.json yarn.lock /app/
+COPY package.json /app/
 
 # update the package manager, install git.
 # install all the prod dependency and remove the unnnecessary packages again to make the build size small.
