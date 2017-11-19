@@ -63,7 +63,7 @@ yarn lint
 - Build the docker image
     - `docker build -t wespeak-api .`
 - Start Docker Container
-    - `docker run -d -p 3030:3030 --name wespeak-api` 
+    - `docker run -d -p 3000:3000 --name wespeak-api wespeak-api` 
 
 ## Documentation
 - `hapi-swagger` self documents all the APIs.

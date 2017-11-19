@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+const Constant = require('../utils/constant')
 
-const listOfStatus = ['ONLINE', 'OFF_ONLINE', 'UNKNOW']
+const listOfStatus = ['AVAILABLE', 'CONNECTING', 'CALLING', 'UNAVAILABLE']
 /**
  * User model || User information
  */
@@ -35,10 +36,14 @@ const UserSchema = new Schema({
     type: String,
     default: ''
   },
+  userFBId: {
+    type: String,
+    default: ''
+  },
   status: {
     type: String,
     enum: listOfStatus,
-    default: 'UNKNOW'
+    default: Constant.USER_STATUS.UNAVAILABLE
   },
   scope: [String]
 }, {

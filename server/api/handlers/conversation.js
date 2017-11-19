@@ -42,7 +42,6 @@ const findConversation = async (req, reply) => {
        */
       const matchConversation = await conversationCtrl.matchConversation(userId, userAvailables)
       if (matchConversation) {
-        console.log('availableConversationId then')
         const conversationOnFirebaseId = await firebase.availableConversation
           .addUserToAvailableConversation(matchConversation.caller, matchConversation.partner)
         if (conversationOnFirebaseId) {

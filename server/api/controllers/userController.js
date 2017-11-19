@@ -64,13 +64,14 @@ const getUserByEmail = async (email) => {
  * @param {*} data 
  */
 const updateUserByUserId = async (userId, data) => {
-  const {about, name, nativeLanguage} = data
+  const { about, name, nativeLanguage, userFBId } = data
   try {
     const userUpdate = User.findById(userId).exec()
     userUpdate.then((user) => {
       user.about = about || user.about
       user.name = name || user.name
       user.nativeLanguage = nativeLanguage || user.nativeLanguage
+      user.userFBId = userFBId || ''
       user.save()
     })
     return userUpdate

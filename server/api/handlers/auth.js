@@ -2,7 +2,7 @@ const {reponseHelper: {responseError}} = require('../../helpers')
 const code = require('../../utils/code')
 const message = require('../../utils/message')
 const { fbLoginCtrl } = require('../controllers/authController')
-const { getUserByEmail, createNewUser } = require('../controllers/userController')
+const { getUserByEmail, createNewUser, updateUserByUserId } = require('../controllers/userController')
 const { genToken } = require('../../../libs/wespeakJwt')
 
 const firebase = require('../../../libs/firebase')
@@ -31,7 +31,10 @@ const facebookSignin = async (request, reply) => {
             status: userExist.status
           }
           const userId = userExist._id
-          const availableUser = firebase.availableUser.addUserToAvailableUser(userId.toString())
+          /**
+           * update : status = AVAILABLE
+           */
+          const availableUser = firebase.availableUser.updateStatusAvailableUser(userId.toString(), { status: userExist.status })
           if (availableUser) {
             return reply({
               access_token: genToken(payloadToken)
@@ -42,11 +45,18 @@ const facebookSignin = async (request, reply) => {
         try {
           const newUser = await createNewUser(userInfo)
           if (newUser) {
-            const availableUser = firebase.availableUser.addUserToAvailableUser(newUser._id.toString())
-            if (availableUser) {
-              return reply({
-                access_token: genToken(payloadToken)
-              })
+            const availableUserId = firebase.availableUser.addUserToAvailableUser(newUser._id.toString())
+            if (availableUserId) {
+              // call to update user collection with userFBId on firebase
+              const updateUserFBId = await updateUserByUserId({ userFBId: availableUserId })
+              if (updateUserFBId) {
+                return reply({
+                  access_token: genToken(payloadToken)
+                })
+              }
+
+              return reply(responseError(code.CAN_NOT_LOGIN, message.CAN_NOT_LOGIN, true))
+
             }
             return reply(responseError(code.CAN_NOT_LOGIN, message.CAN_NOT_LOGIN, true))
           }
