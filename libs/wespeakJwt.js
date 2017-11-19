@@ -42,7 +42,19 @@ const genToken = (data) => {
   return weSpeakToken
 }
 
+const payloadToken = (data) => {
+  return {
+    id: data._id,
+    email: data.email,
+    scope: data.scope,
+    nativeLanguage: data.nativeLanguage,
+    name: data.name,
+    status: data.status
+  }
+}
+
 module.exports = {
   validateJwt,
-  genToken
+  genToken,
+  payloadToken
 }

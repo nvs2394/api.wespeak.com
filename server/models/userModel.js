@@ -36,14 +36,10 @@ const UserSchema = new Schema({
     type: String,
     default: ''
   },
-  userFBId: {
-    type: String,
-    default: ''
-  },
   status: {
     type: String,
     enum: listOfStatus,
-    default: Constant.USER_STATUS.UNAVAILABLE
+    default: Constant.USER_STATUS.AVAILABLE
   },
   scope: [String]
 }, {

@@ -19,8 +19,7 @@ const getListAvailableUser = () => {
  * @param {*} userId 
  */
 const addUserToAvailableUser = (userId) => {
-  const userKey = ref.child('available_user').push().key
-  const availableUserRef = ref.child('available_user/' + `${userKey}`)
+  const availableUserRef = ref.child('available_user/' + `${userId}`)
 
   const user = {
     user_id: userId.toString(),
@@ -29,7 +28,7 @@ const addUserToAvailableUser = (userId) => {
   return new Promise((resolve, reject) => {
     try {
       availableUserRef.set(user).then(() => {
-        return resolve(userKey)
+        return resolve(userId)
       })
     } catch (error) {
       return reject(error)

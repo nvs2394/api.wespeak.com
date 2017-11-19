@@ -12,7 +12,7 @@
     "port": "27017"
   },
   "fireBaseApi": {
-    "projectURL": "https://api-project-561826619057.firebaseio.com"
+    "projectURL": "https://we-speak.firebaseio.com"
   },
   "openTok": {
     "apiKey": "45969452",
