@@ -22,8 +22,6 @@
     "report-coverage": "codeclimate-test-reporter < ./coverage/lcov.info"
   },
   "dependencies": {
-    "axios": "0.16.2",
-    "bluebird": "3.5.0",
     "boom": "5.2.0",
     "bunyan": "1.8.12",
     "config": "1.26.2",
@@ -36,7 +34,6 @@
     "hapi-swagger": "7.7.1",
     "http-status": "1.0.1",
     "inert": "4.2.1",
-    "inherits": "^2.0.3",
     "joi": "10.6.0",
     "lodash": "^4.17.4",
     "mongoose": "^4.13.0",

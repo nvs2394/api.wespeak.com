@@ -9,6 +9,7 @@ const getListAvailableUser = () => {
     let listUser = []
     availableUserRef.on('child_added', (snapshot) => {
       listUser.push(snapshot.val())
+      listUser.filter((user) => user.status === Constant.USER_STATUS.AVAILABLE)
       return resolve(listUser)
     })
   })
@@ -36,7 +37,7 @@ const addUserToAvailableUser = (userId) => {
   })
 }
 
-const updateStatusAvailableUser = (userFBId, data) => {
+const updateAvailableUser = (userFBId, data) => {
   const userKey = 'available_user/' + `${userFBId}`
   const availableUserRef = ref.child(userKey)
 
@@ -48,5 +49,5 @@ const updateStatusAvailableUser = (userFBId, data) => {
 module.exports = {
   getListAvailableUser,
   addUserToAvailableUser,
-  updateStatusAvailableUser
+  updateAvailableUser
 }

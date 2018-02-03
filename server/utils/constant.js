@@ -11,5 +11,6 @@ module.exports = {
     CONNECTING: 'CONNECTING',
     CALLING: 'CALLING',
     UNAVAILABLE: 'UNAVAILABLE'
-  }
+  },
+  FIND_TIMMER: 10
 }

@@ -1,7 +1,9 @@
 'use strict'
+const _ = require('lodash')
 const mongoose = require('mongoose')
 const Conversation = mongoose.model('conversation')
-const _ = require('lodash')
+const Constant = require('../../utils/constant')
+const matchingController = require('./matchingController')
 
 /**
  * 
@@ -18,7 +20,8 @@ const getConversationByUserId = (userId) => {
 
 /**
  * 
- * @param {*} userId 
+ * @param {*} userId
+ * @param {*} filter
  */
 const getConversationByFilter = ({userId, ...filter}) => {
   const selectField = ['name', 'avatarUrl', 'nativeLanguage']
@@ -34,18 +37,19 @@ const getConversationByFilter = ({userId, ...filter}) => {
   }
 }
 
-/**
- * 
- * @param {*} userId 
- * @param {*} listUser 
- */
-const matchConversation = (userId, listUser) => {
-  const newList = _.filter(listUser, (user) => user.user_id !== userId)
-  const conversation = {
-    caller: userId,
-    partner: _.sample(newList).user_id
+const findConversation = (userId, listUser) => {
+  let foundConversation = null
+  for (let i = 0; i < Constant.FIND_TIMMER; i++) {
+    const matching = matchingController.matchConversation(userId, listUser)
+    if (matching) {
+      foundConversation = matching
+      const conversationsDetail = matchingController.assignMatching(userId, foundConversation)
+      return conversationsDetail
+    }
+    if (i === Constant.FIND_TIMMER - 1) {
+      return foundConversation
+    }
   }
-  return conversation
 }
 
 /**
@@ -117,10 +121,10 @@ const getConversationById = (conversationId) => {
 
 module.exports = {
   getConversationByUserId,
-  matchConversation,
   saveConversationToLocalDB,
   changeStatusConversation,
   updateConversationToLocalDB,
   getConversationById,
-  getConversationByFilter
+  getConversationByFilter,
+  findConversation
 }

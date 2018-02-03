@@ -37,31 +37,23 @@ const findConversation = async (req, reply) => {
     if (_.isEmpty(isAvailable) && _.isEmpty(userAvailables)) {
       return reply(responseError(httpStatus.INTERNAL_SERVER_ERROR, httpStatus[500], true))
     } else {
-      /**
-       * Match User 
-       */
-      const matchConversation = await conversationCtrl.matchConversation(userId, userAvailables)
-      if (matchConversation) {
-        const conversationOnFirebaseId = await firebase.availableConversation
-          .addUserToAvailableConversation(matchConversation.caller, matchConversation.partner)
-        if (conversationOnFirebaseId) {
-          /**
-           * Save to Conversation Model
-           */
-          const newConversation = await conversationCtrl
-            .saveConversationToLocalDB(matchConversation.caller, matchConversation.partner, conversationOnFirebaseId)
-          if (newConversation) {
-            /**
-             * GET Conversation detail
-             */
-            const conversationDetail = await conversationCtrl.getConversationById(newConversation._id)
-            if (conversationDetail) {
-              return reply(responseSuccess(httpStatus.OK, httpStatus[200], conversationDetail))
-            }
-          }
-        }
-        return reply(responseError(code.CAN_NOT_MATCH_CONVERSATION, message.CAN_NOT_MATCH_CONVERSATION, true))
+      // Add isFind to available on fireBase then apply matching with isFind priority
+      const updateUser = {
+        isFind: true,
+        status: Constant.USER_STATUS.CONNECTING,
+        user_id: userId.toString()
       }
+      const addIsFindToUser = firebase.availableUser
+        .updateAvailableUser(userId, updateUser)
+      if (!addIsFindToUser) {
+        return reply(responseError(httpStatus.INTERNAL_SERVER_ERROR, httpStatus[500], true))
+      }
+      const userAvailablesWithFind = await firebase.availableUser.getListAvailableUser()
+      /**
+       * Match conversation
+       */
+      const foundConversation = await conversationCtrl.findConversation(userId, userAvailablesWithFind)
+      return reply(responseSuccess(code.FINDING_CONVERSATION, message.FINDING_CONVERSATION, foundConversation))
     }
   } catch (error) {
     return reply(responseError(httpStatus.INTERNAL_SERVER_ERROR, error, httpStatus[500]))
